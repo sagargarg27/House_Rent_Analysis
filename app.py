@@ -70,8 +70,8 @@ selectedlat = float(findlat(localityName,dff))
 selectedlong = float(findlong(localityName,dff))
 
 # Text_input Longitude and long
-st.text_input("**:blue[Latitude of selected locality]**", selectedlat,disabled=True)
-st.text_input("**:blue[Longitude of selected locality]**", selectedlong,disabled=True)
+st.text_input("**:blue[Latitude of selected location]**", selectedlat,disabled=True)
+st.text_input("**:blue[Longitude of selected location]**", selectedlong,disabled=True)
 
 #companyName
 lk=df.groupby('localityName')
