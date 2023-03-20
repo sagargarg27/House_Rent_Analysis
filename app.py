@@ -114,54 +114,57 @@ st.text_input('**:blue[Distance of New Delhi Railway Station from selected locat
 
 ## Prediction
 if st.button('**Predict Rent**'):
+    if size_sq_ft<100:
+        st.error("**_Please Enter Valid House Size_**")
+    else:
     
-    ## Property type mapping
-    property_type_map = {'Independent_Floor': '1', 'Apartment': '2', 'Independent_House':' 3', 'Villa': '4'}
-    propertyType = property_type_map[propertyType]
-    
-    ## Assigning Values
-    tst= pd.DataFrame({'size_sq_ft':size_sq_ft,
-                  'propertyType':propertyType,
-                  'bedrooms':bedrooms,
-                  'latitude':selectedlat,
-                  'longitude':selectedlong,
-                  'suburbName':suburbName,
-                  'companyName':companyName,
-                  'closest_metro_station_km':selectedmetro,
-                  'AP_dist_km':selectedairport,
-                  'Aiims_dist_km':selectedaiims,
-                  'NDRLW_dist_km':selectedrailway} , index=[0])
-    
-    X_transf_tst = ct.transform(tst).toarray()
-    
-    # unpickle the best model
-    y_pred = best_model.predict(X_transf_tst)
-    
-    #Residual Error
-    resid = y_train - best_model.oob_prediction_
-    
-    # Prediction Interval
-    lowq = resid.quantile(0.25)
-    higq = resid.quantile(0.75)
-    
-    test_y = best_model.predict(X_transf_tst)
-    lowt = (test_y + lowq).clip(0) #cant have negative numbers
-    higt = (test_y + higq)
-    
-    
-    progress_text = "*Operation in progress. Please wait...*"
-    my_bar = st.progress(0, text=progress_text)
-    
-    for percent_complete in range(100):
-        time.sleep(0.01)
-        my_bar.progress(percent_complete + 1, text=progress_text)
+        ## Property type mapping
+        property_type_map = {'Independent_Floor': '1', 'Apartment': '2', 'Independent_House':' 3', 'Villa': '4'}
+        propertyType = property_type_map[propertyType]
         
-    # Presenting Results
-    formatted_lowt = '{:,}'.format(int(lowt))
-    formatted_higt = '{:,}'.format(int(higt))
-    st.success("**_The Approximate monthly rent of selected Property will be between ₹" + formatted_lowt + " to ₹" + formatted_higt + "_**")
-    
-    if st.success:
+        ## Assigning Values
+        tst= pd.DataFrame({'size_sq_ft':size_sq_ft,
+                           'propertyType':propertyType,
+                           'bedrooms':bedrooms,
+                           'latitude':selectedlat,
+                           'longitude':selectedlong,
+                           'suburbName':suburbName,
+                           'companyName':companyName,
+                           'closest_metro_station_km':selectedmetro,
+                           'AP_dist_km':selectedairport,
+                           'Aiims_dist_km':selectedaiims,
+                           'NDRLW_dist_km':selectedrailway} , index=[0])
+        
+        X_transf_tst = ct.transform(tst).toarray()
+        
+        # unpickle the best model
+        y_pred = best_model.predict(X_transf_tst)
+        
+        #Residual Error
+        resid = y_train - best_model.oob_prediction_
+        
+        # Prediction Interval
+        lowq = resid.quantile(0.25)
+        higq = resid.quantile(0.75)
+        
+        test_y = best_model.predict(X_transf_tst)
+        lowt = (test_y + lowq).clip(0) #cant have negative numbers
+        higt = (test_y + higq)
+        
+        
+        progress_text = "*Operation in progress. Please wait...*"
+        my_bar = st.progress(0, text=progress_text)
+        
+        for percent_complete in range(100):
+            time.sleep(0.01)
+            my_bar.progress(percent_complete + 1, text=progress_text)
+            
+        # Presenting Results
+        formatted_lowt = '{:,}'.format(int(lowt))
+        formatted_higt = '{:,}'.format(int(higt))
+        st.success("**_The Approximate monthly rent of selected Property will be between ₹" + formatted_lowt + " to ₹" + formatted_higt + "_**")
+        
+        if st.success:
             my_bar.empty()
     
     
